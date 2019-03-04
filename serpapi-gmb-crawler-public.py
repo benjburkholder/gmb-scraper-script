@@ -3,26 +3,16 @@ from lib.google_search_results import GoogleSearchResults
 # Documentation ~ https://serpapi.com/demo
 
 """
-Local txt file will hold composite of dealer name, city, state: e.g bob's satellites lexington kentucky
-This should ensure the knowledge graph/listing will be pulled up in SERP
+*NOTE* ~ Make sure every entry in 'serp_urls.txt' has this structure: [business name],[city],[state].
 
-For loop will perform each call with different query parameter.
-JSON results are filtered to only contain knowledge graph results.
-We can filter out these results down to just the most important fields as well:
-- Name
-- Address
-- Website
-- GMB Claim status
-- For chain locations, will need to specify city and state in query parameters.
-- Create input area where the user will specify whether or not the locations being scraped are chain/franchise
-    or if they are uniquely named locations. This will govern how the program works.
+This is important because each entry is then saved to a list, delimiter split via comma, and each piece
+added where needed in request.
+
+The reason is because the API for some reason can't correctly detect the GMB claimed status if there are geo-modifiers
+present.
 """
 
-print('Are the locations chains or uniquely named?')
-print('Chain/Franchise Names (A)')
-print('Unique Names (B)')
-print('-' * 20)
-choice = input('Enter Letter of Choice: ')
+api_key = open('serp-api-key.txt').read()
 
 downloadFile = 'gmb-status-crawl.csv'
 file = open(downloadFile, 'w')
@@ -30,32 +20,21 @@ file = open(downloadFile, 'w')
 columnHeader = 'Query,Name,Address,Website,GMB Unclaimed?\n'
 file.write(columnHeader)
 
-with open('serp_urls.txt') as content, open('serp_locations.txt') as location:
+with open('serp_urls.txt') as content:
     content = [line.rstrip('\n') for line in content]
-    location = [line.rstrip('\n') for line in location]
+    content = [line.split(",") for line in content]
 
     for line in content:
-        for loc in location:
-            errorType = ''
-            if choice == 'B':
-                params = {
-                    "q" : str(line),
-                    "location" : "United States",
-                    "hl" : "en",
-                    "gl" : "us",
-                    "google_domain" : "google.com",
-                    "api_key" : "Enter own API Key from SERP API",
-                }
+        errorType = ''
+        params = {
+            "q" : str(line[0]),
+            "location" : f"{line[1]},{line[2]},United States",
+            "hl" : "en",
+            "gl" : "us",
+            "google_domain" : "google.com",
+            "api_key" : api_key,
+        }
 
-            elif choice == 'A':
-                params = {
-                    "q": str(line),
-                    "location": f'{loc}, United States',
-                    "hl": "en",
-                    "gl": "us",
-                    "google_domain": "google.com",
-                    "api_key": "Enter own API Key from SERP API",
-                }
         query = GoogleSearchResults(params)
         dictionary_results = query.get_dictionary()
         # print(dictionary_results['knowledge_graph'])

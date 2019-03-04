@@ -54,7 +54,7 @@ with open('serp_urls.txt') as content, open('serp_locations.txt') as location:
                     "hl": "en",
                     "gl": "us",
                     "google_domain": "google.com",
-                    "api_key": "32b9a805adc53cc21080d4f3c5a2d7f23f22ea53eeb3875e9b912a73eb794765",
+                    "api_key": "Enter own API Key from SERP API",
                 }
         query = GoogleSearchResults(params)
         dictionary_results = query.get_dictionary()

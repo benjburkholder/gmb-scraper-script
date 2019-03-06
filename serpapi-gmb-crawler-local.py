@@ -8,8 +8,6 @@ from lib.google_search_results import GoogleSearchResults
 This is important because each entry is then saved to a list, delimiter split via comma, and each piece
 added where needed in request.
 
-The reason is because the API for some reason can't correctly detect the GMB claimed status if there are geo-modifiers
-present.
 """
 
 api_key = open('serp-api-key.txt').read()

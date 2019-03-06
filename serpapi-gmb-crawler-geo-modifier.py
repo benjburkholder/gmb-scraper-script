@@ -22,13 +22,12 @@ file.write(columnHeader)
 
 with open('serp_urls.txt') as content:
     content = [line.rstrip('\n') for line in content]
-    content = [line.split(",") for line in content]
 
     for line in content:
         errorType = ''
         params = {
-            "q" : str(line[0]),
-            "location" : f"{line[1]},{line[2]},United States",
+            "q" : str(line),
+            "location" : "United States",
             "hl" : "en",
             "gl" : "us",
             "google_domain" : "google.com",
@@ -38,14 +37,14 @@ with open('serp_urls.txt') as content:
         query = GoogleSearchResults(params)
         dictionary_results = query.get_dictionary()
         # print(dictionary_results['knowledge_graph'])
-        query = "{} {} {}".format(line[0], line[1], line[2])
 
         try:
             name = dictionary_results['knowledge_graph']['title']
+            address = dictionary_results['knowledge_graph']['address']
         except KeyError:
             errorType = 'Error'
-            row = f'"{query}" ~ No Listing Exists\n'
-            print(f'{query} ~ No Listing Exists')
+            row = f'"{line}" ~ No Listing Exists\n'
+            print(f'{line} ~ No Listing Exists')
             file.write(row)
 
         if errorType != 'Error':
@@ -57,7 +56,7 @@ with open('serp_urls.txt') as content:
                 listingStatus = dictionary_results['knowledge_graph']['unclaimed_listing']
             except KeyError as e:
                 listingStatus = 'FALSE'
-                row1 = f'"{query}","{name}","{address}",{website},{listingStatus}\n'
+                row1 = f'"{line}","{name}","{address}",{website},{listingStatus}\n'
                 file.write(row1)
                 print(row1)
             else:
@@ -66,6 +65,6 @@ with open('serp_urls.txt') as content:
                 website = dictionary_results['knowledge_graph']['website']
                 listingStatus = dictionary_results['knowledge_graph']['unclaimed_listing']
 
-                row = f'"{query}","{name}","{address}",{website},{listingStatus}\n'
+                row = f'{line},"{name}","{address}",{website},{listingStatus}\n'
                 file.write(row)
                 print(row)

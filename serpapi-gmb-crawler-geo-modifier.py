@@ -3,13 +3,8 @@ from lib.google_search_results import GoogleSearchResults
 # Documentation ~ https://serpapi.com/demo
 
 """
-*NOTE* ~ Make sure every entry in 'serp_urls.txt' has this structure: [business name],[city],[state].
-
-This is important because each entry is then saved to a list, delimiter split via comma, and each piece
-added where needed in request.
-
-The reason is because the API for some reason can't correctly detect the GMB claimed status if there are geo-modifiers
-present.
+NOTE ~ Queries should be structured in this format: query city state(abbreviation).
+E.g., hardware store Cleveland OH
 """
 
 api_key = open('serp-api-key.txt').read()

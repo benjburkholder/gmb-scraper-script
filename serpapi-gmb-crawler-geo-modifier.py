@@ -3,8 +3,13 @@ from lib.google_search_results import GoogleSearchResults
 # Documentation ~ https://serpapi.com/demo
 
 """
-*NOTE* ~ Make sure every entry in 'serp_urls.txt' has this structure: [business name] [city] [state].
+*NOTE* ~ Make sure every entry in 'serp_urls.txt' has this structure: [business name],[city],[state].
 
+This is important because each entry is then saved to a list, delimiter split via comma, and each piece
+added where needed in request.
+
+The reason is because the API for some reason can't correctly detect the GMB claimed status if there are geo-modifiers
+present.
 """
 
 api_key = open('serp-api-key.txt').read()
@@ -22,7 +27,7 @@ with open('serp_urls.txt') as content:
         errorType = ''
         params = {
             "q" : str(line),
-            "location" : "United States",
+            "location" : "Cleveland, Ohio, United States",
             "hl" : "en",
             "gl" : "us",
             "google_domain" : "google.com",
@@ -38,8 +43,8 @@ with open('serp_urls.txt') as content:
             address = dictionary_results['knowledge_graph']['address']
         except KeyError:
             errorType = 'Error'
-            row = f'"{line}" ~ No Listing Exists\n'
-            print(f'{line} ~ No Listing Exists')
+            row = f'"{line}" ~ No listing exists OR is in local map pack. Perform manual search to verify.\n'
+            print(f'{line} ~ No listing exists OR is in local map pack. Perform manual search to verify.')
             file.write(row)
 
         if errorType != 'Error':

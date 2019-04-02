@@ -1,5 +1,7 @@
-**SUMMARY\**
+**Requirements:**
+Purchase SERPApi Key~ https://serpapi.com/
 
+**SUMMARY**
 These two scripts take in a list of queries to check the SERP and find information about the Google My Business listings
 present.
 
